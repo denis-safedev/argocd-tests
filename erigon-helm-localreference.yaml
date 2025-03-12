@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: erigon-testnet
+  namespace: argocd
+spec:
+  project: default
+  source:
+    chart: erigon
+    repoURL: https://ethpandaops.github.io/ethereum-helm-charts
+    targetRevision: 1.0.12
+    helm:
+      releaseName: erigon-testnet
+      valuesObject:
+        image:
+          tag: "v2.61.3"
+        extraArgs:
+          - --chain=holesky
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
